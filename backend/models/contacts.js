@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ContactUserSchema = new mongoose.Schema({
     name: {
       type: String,
+      unique: true,
       index: true
     },
     phone:{
