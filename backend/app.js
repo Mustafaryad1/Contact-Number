@@ -32,12 +32,16 @@ mongoose.connection.on('error', err => {
     console.log(err)
 });
 
+// import routes
+const contacts_routes = require('./routes/contact_routes')
 
 // app root routes
 app.get('/',(req,res)=>{
     res.send({'homepage':'this is home page'});
 });
 
+// load routes
+app.use('/contacts',contacts_routes)
 
 // run express app
 app.listen(3000, async ()=>{
