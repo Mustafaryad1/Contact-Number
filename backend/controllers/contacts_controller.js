@@ -1,7 +1,9 @@
 const ContactUser = require('../models/contacts');
 
 getContacts = async(req,res)=>{
-    contacts = await ContactUser.find({})
+    const {skip=0,limit=10} = req.query;
+    
+    contacts = await ContactUser.find({}).limit(parseInt(limit)).skip(parseInt(skip))
     res.send({success:true, contacts})
 }
 

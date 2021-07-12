@@ -5,20 +5,20 @@ const authMiddleware = require('../middleware/authMiddleware')
 const validation_body = require('../middleware/validationBody');
 
 router.get("/list",
-            authMiddleware.requireAuth,
+            // authMiddleware.requireAuth,
             contactsController.getContacts)
 
 router.post('/add', 
              validation_body(ContactUserSchema.AddContactUserScehma),
-             authMiddleware.requireAuth,
+            //  authMiddleware.requireAuth,
              contactsController.addContact)
 
 router.put("/update/:id",
-            authMiddleware.requireAuth,
+            // authMiddleware.requireAuth,
             contactsController.updateContact)
 
 router.delete("/delete/:id",
-            authMiddleware.requireAuth,
+            // authMiddleware.requireAuth,
             contactsController.deleteContact)
 
 
