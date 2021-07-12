@@ -20,13 +20,49 @@ addContact = (req,res)=>{
 }
 
 
-updateContact = (req,res)=>{
-    res.send("update")
+updateContact = async(req,res)=>{
+    const contact_id = req.params.id;
+    try {
+        await ContactUser.findByIdAndUpdate({_id:contact_id},
+                req.body,
+                {new:true},
+                (err, contact)=>{
+                    if(err){
+                        res.status(500).send({success:false,message:err});
+                    }
+                        res.send({success:true,message:"Contact has been updated",contact})
+                })
+        }
+    catch (err) {
+        res.status(404).send({
+        success: false,
+        message: "contact not found"
+        })
+    }
 }
 
 
-deleteContact = (req,res)=>{
-    res.send("delete")
+deleteContact = async(req,res)=>{
+    const contact_id = req.params.id;
+    ContactUser.findByIdAndDelete(contact_id)
+     .then(contact=>{
+        if(!contact){
+            res.status(404).send({
+                success: false,
+                message: "contact not found"
+            })
+        }
+        res.send({
+            succes: true,
+            message: `contact user ${contact.name} has been deleted`,
+          })
+    })
+     .catch(err=>{
+        res.status(400).send({
+            succes: false,
+            err
+          })
+    })
 }
 
 
