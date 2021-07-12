@@ -33,7 +33,8 @@ mongoose.connection.on('error', err => {
 });
 
 // import routes
-const contacts_routes = require('./routes/contact_routes')
+const contacts_routes = require('./routes/contact_routes');
+const user_routes = require('./routes/user_routes');
 
 // app root routes
 app.get('/',(req,res)=>{
@@ -42,6 +43,7 @@ app.get('/',(req,res)=>{
 
 // load routes
 app.use('/contacts',contacts_routes)
+app.use('/user',user_routes)
 
 // run express app
 app.listen(3000, async ()=>{
