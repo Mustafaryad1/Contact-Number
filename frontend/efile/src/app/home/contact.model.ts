@@ -5,5 +5,5 @@ export class Contact{
   phone: string | undefined;
   address: string | undefined;
   notes: string | undefined;
-  in_edit_mode:boolean | false | undefined;
+  blocked:boolean | false | undefined;
 }

@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   notes = "";
   id = "";
   is_edit = false;
+  contactSocket:any;
 
   ngOnInit(): void {
     // for get all contacts
@@ -30,9 +31,15 @@ export class HomeComponent implements OnInit {
       if(this.page){
       this.contacts = res.contacts.slice(5*(this.page-1),5*this.page);
       }
+      this._socket.connect()
+      this._socket.socket?.on("blockEdit",(contact_id)=>{
+        res.contacts.map((item: any)=>{
+          if(item._id===contact_id){
+            item['blocked'] = true
+          }
+        })
+      })
     })
-    this._socket.connect()
-
   }
 
 
@@ -54,6 +61,7 @@ export class HomeComponent implements OnInit {
       this.inital_contact_values()
     }
     edit(contact:any){
+      this._socket.socket?.emit("edit", contact._id)
       this.name = contact.name;
       this.phone = contact.phone;
       this.address = contact.address;
@@ -61,6 +69,7 @@ export class HomeComponent implements OnInit {
       this.is_edit =true;
       this.id = contact._id;
       this.add = true;
+
     }
 
     editContact(){
