@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ContactsService } from '../services/contacts.service';
 import { Contact } from './contact.model';
 
@@ -12,6 +13,14 @@ export class HomeComponent implements OnInit {
   constructor(private contactService:ContactsService) { }
   page = 1;
   items_length = 0;
+  add = false;
+  name = "";
+  phone = "";
+  address = "";
+  notes = "";
+  id = "";
+  is_edit = false;
+
   ngOnInit(): void {
     // for get all contacts
     this.contactService.get_contacts().subscribe(res=>{
@@ -22,17 +31,70 @@ export class HomeComponent implements OnInit {
       }
     })
 
-    // for add contact
-    // this.contactService.add_contact({name:"woka2",phone:"123",address:"sdf",notes:"wo"}).subscribe(res=>{
-    //   console.log(res)
-    // })
-    // for update contact
-    // this.contactService.update_contact({name:"worrrk"},"60ed5acc465ff71414f9061e").subscribe(res=>{
-    //   console.log(res)
-    // })
+
+  }
 
 
+  // for update contact
+
+
+
+  inital_contact_values(){
+    this.name ="";
+    this.phone ="";
+    this.address ="";
+    this.notes ="";
+  }
+
+    // Toggle add form
+    isAdd(){
+
+      this.add = !this.add;
     }
+    edit(contact:any){
+      this.name = contact.name;
+      this.phone = contact.phone;
+      this.address = contact.address;
+      this.notes = contact.notes;
+      this.is_edit =true;
+      this.id = contact._id;
+      this.add = true;
+    }
+
+    editContact(){
+      const user = {name:this.name, phone:this.phone, address:this.address, notes:this.notes}
+      this.contactService.update_contact(user, this.id).subscribe(res=>{
+        this.add = false;
+        this.is_edit = false;
+        this.inital_contact_values();
+        const new_contact = res.contact;
+        this.contacts.map((item)=>{
+          if(item._id === new_contact._id){
+            item.name = new_contact.name;
+            item.phone = new_contact.phone;
+            item.address = new_contact.address;
+            item.notes = new_contact.notes;
+          }
+        })
+       },(err)=>{
+         alert("Something Wrong")
+       })
+    }
+
+    // Add Contact
+    addContact(){
+        this.contactService.add_contact({name:this.name,
+                                        phone:this.phone,
+                                        address:this.address,
+                                        notes:this.notes}).subscribe(res=>{
+        this.inital_contact_values()
+        this.add = false;
+
+    },(err)=>{
+      alert("Please add valid data")
+    })
+    }
+
     deleteContact(_contact_id: any){
       // for delete contact
       if (window.confirm("Are You Sure you want delete this contact"))
