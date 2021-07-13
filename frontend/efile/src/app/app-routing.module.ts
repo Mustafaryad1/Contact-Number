@@ -6,11 +6,15 @@ import { LoginComponent } from './login/login.component';
 const routes: Routes = [
   {
     path:'',
-    component:HomeComponent
+    component:LoginComponent
   },
   {
     path:'login',
     component:LoginComponent
+  },
+  {
+    path:"contacts",
+    component:HomeComponent
   },
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
