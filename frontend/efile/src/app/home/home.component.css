@@ -1,0 +1,7 @@
+.details{
+  list-style-type: none;
+}
+.details li {
+  display: inline;
+  margin: 5px;
+}
