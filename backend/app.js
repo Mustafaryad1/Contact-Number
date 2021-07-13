@@ -11,10 +11,8 @@ const ContactUser = require('./models/contacts')
 const swaggerUi = require('swagger-ui-express');
 // swaggerDocument = require('./swagger.json');
 
-
 // routes
 const contact_routes = require('./routes/contact_routes');
-
 
 // config app
 const app = express();
@@ -24,6 +22,18 @@ app.use(bodyParser.urlencoded({extended: true}));
 // corss origin 
 app.use(cors());
 
+// socket io 
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+// handle connections
+io.of('/api/socket').on("connection",(socket)=>{
+    console.log(`socket.io: User connected ${socket.id}`);
+    
+    socket.on("disconnect",()=>{
+        console.log(`socket.io: User disconnected ${socket.id}`);
+    })
+})
+
 
 // config mongodb
 const mongodbURI = "mongodb+srv://mustafa:contactpassword@cluster0.tpo90.mongodb.net/contacts?retryWrites=true&w=majority"
@@ -31,6 +41,28 @@ mongoose.connect(mongodbURI, {useNewUrlParser: true,useUnifiedTopology: true});
 mongoose.connection.on('error', err => {
     console.log(err)
 });
+// mongoose connection and listener
+const connection = mongoose.connection;
+connection.once("open",()=>{
+    console.log("Mongodb database connected ");
+
+    // settings change streams
+    const contactChangeStream = connection.collection('contact_users').watch();
+
+    contactChangeStream.on("change",(change)=>{
+        switch(change.operationType){
+            case "insert":
+                const contact = {
+                    _id: change.fullDocument._id,
+                    name: change.fullDocument.name,
+                };
+            io.of("/api/socket").emit("newContact",contact);
+            break
+        }
+    })
+
+})
+
 
 // import routes
 const contacts_routes = require('./routes/contact_routes');
