@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ContactsService } from '../services/contacts.service';
+import { SocketioService } from '../services/socketio.service';
 import { Contact } from './contact.model';
 
 @Component({
@@ -10,7 +11,7 @@ import { Contact } from './contact.model';
 })
 export class HomeComponent implements OnInit {
   contacts:Contact[] = [];
-  constructor(private contactService:ContactsService) { }
+  constructor(private contactService:ContactsService, private _socket:SocketioService) { }
   page = 1;
   items_length = 0;
   add = false;
@@ -30,7 +31,7 @@ export class HomeComponent implements OnInit {
       this.contacts = res.contacts.slice(5*(this.page-1),5*this.page);
       }
     })
-
+    this._socket.connect()
 
   }
 
@@ -48,8 +49,9 @@ export class HomeComponent implements OnInit {
 
     // Toggle add form
     isAdd(){
-
+      this.is_edit = false;
       this.add = !this.add;
+      this.inital_contact_values()
     }
     edit(contact:any){
       this.name = contact.name;
