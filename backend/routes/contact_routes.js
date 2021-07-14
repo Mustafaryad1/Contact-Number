@@ -21,5 +21,10 @@ router.delete("/delete/:id",
             // authMiddleware.requireAuth,
             contactsController.deleteContact)
 
+router.get("/search",
+              // authMiddleware.requireAuth,
+              contactsController.search_contact
+)
+
 
 module.exports = router

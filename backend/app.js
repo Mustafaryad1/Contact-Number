@@ -24,16 +24,22 @@ app.use(cors());
 
 // socket io 
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server,{
+    cors:true,
+    origins:['*']
+})
 // handle connections
-io.of('/api/socket').on("connection",(socket)=>{
+io.on("connection",(socket)=>{
     console.log(`socket.io: User connected ${socket.id}`);
-    
+    socket.on("edit",(contact_id)=>{
+        console.log("called");
+        socket.broadcast.emit("blockEdit",contact_id);
+        
+    });
     socket.on("disconnect",()=>{
         console.log(`socket.io: User disconnected ${socket.id}`);
     })
 })
-
 
 // config mongodb
 const mongodbURI = "mongodb+srv://mustafa:contactpassword@cluster0.tpo90.mongodb.net/contacts?retryWrites=true&w=majority"
@@ -78,7 +84,7 @@ app.use('/contacts',contacts_routes)
 app.use('/user',user_routes)
 
 // run express app
-app.listen(3000, async ()=>{
+server.listen(3000, async ()=>{
     console.log("Server is Running on port 3000");
     const users = await User.find({});
 

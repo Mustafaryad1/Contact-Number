@@ -68,4 +68,11 @@ deleteContact = async(req,res)=>{
 }
 
 
-module.exports = {addContact, getContacts, updateContact, deleteContact}
+search_contact = async(req,res)=>{
+    const search_name_value = req.query.name;
+    const contacts = await ContactUser.find({name:{'$regex':search_name_value}})
+    res.send({success:true, contacts})
+}
+
+
+module.exports = {addContact, getContacts, updateContact, deleteContact, search_contact}
