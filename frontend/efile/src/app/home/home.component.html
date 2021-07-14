@@ -8,7 +8,6 @@
         </svg>
       </button>
     </h2>
-
     <div class="w-25" *ngIf="add">
       <label>name</label>
       <input type="text" class="form-control" [(ngModel)]="name">
@@ -23,7 +22,14 @@
       <button class="btn btn-success m-2" (click)="editContact()" *ngIf="is_edit">Edit Contact</button>
     </div>
   </div>
-
+  <div class="border p-3 border shadow-sm  form-rounded" *ngIf="!add">
+    <label>Search :</label>
+    <input (keyup)="serachByName()"
+           class="w-25 ml-2 form-control d-inline"
+           [(ngModel)]="search_name"
+           type="text"
+           name="name">
+  </div>
   <div class="container text-center mt-5 font-weight-bolder" *ngIf="contacts.length === 0">
     <h2>No Places Found...</h2>
   </div>

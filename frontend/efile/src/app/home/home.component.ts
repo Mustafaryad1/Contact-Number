@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   contacts:Contact[] = [];
   constructor(private contactService:ContactsService, private _socket:SocketioService) { }
   page = 1;
+  search_name = "";
   items_length = 0;
   add = false;
   name = "";
@@ -116,7 +117,13 @@ export class HomeComponent implements OnInit {
         console.log(this.contacts)
       })
 
-  }
+    }
+
+    serachByName(){
+      this.contactService.search_by_name(this.search_name).subscribe(res=>{
+        this.contacts = res.contacts;
+      })
+    }
 
   previous(){
     if (this.page < 1){

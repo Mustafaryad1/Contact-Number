@@ -24,4 +24,8 @@ export class ContactsService {
     return this.http.delete<any>(this.contacts_url+`/delete/${id}`)
   }
 
+  search_by_name(name: string){
+    return this.http.get<any>(this.contacts_url+`/search?name=${name}`)
+  }
+
 }
